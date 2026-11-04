@@ -10,6 +10,7 @@ import {
   ExternalLink,
   MapPin,
   Sparkles,
+  Tag,
 } from 'lucide-react';
 import { Product } from '../../types';
 
@@ -46,7 +47,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 transition-colors font-medium"
         >
           <ChevronLeft className="w-4 h-4" />
-          <span>Back to Collection</span>
+          <span>Back to Market</span>
         </button>
 
         <div className="flex items-center gap-2">
@@ -66,11 +67,11 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             href={product.images[activeImageIndex]}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open hotlinked source image in new tab"
+            title="Inspect source image in full resolution"
             className="flex items-center gap-1 text-xs bg-stone-900 border border-stone-800 px-3 py-1.5 rounded-xl text-stone-300 hover:text-white transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Inspect CDN</span>
+            <span className="hidden sm:inline">Inspect Photo</span>
           </a>
         </div>
       </div>
@@ -79,15 +80,22 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Image Gallery (7 Cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="aspect-[4/3] w-full bg-stone-950 rounded-3xl overflow-hidden border border-stone-850 relative shadow-2xl group">
+          <div className="aspect-[4/3] w-full bg-stone-950 rounded-3xl overflow-hidden border border-stone-850 relative shadow-2xl group flex items-center justify-center p-6">
             <img
               src={product.images[activeImageIndex]}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-105"
             />
-            {product.stockCount <= 5 && (
+            
+            {/* Price Tag Overlay Badge */}
+            <div className="absolute top-4 left-4 bg-stone-950/90 backdrop-blur-md text-xs font-mono text-emerald-400 px-3 py-1.5 rounded-xl border border-emerald-800/40 shadow-lg flex items-center gap-1.5">
+              <Tag className="w-3.5 h-3.5 text-amber-400" />
+              <span>Current Market Price: <strong>₦{product.price.toLocaleString()}</strong></span>
+            </div>
+
+            {product.stockCount <= 20 && (
               <div className="absolute bottom-4 left-4 bg-stone-950/85 backdrop-blur-md text-xs text-amber-400 px-3 py-1.5 rounded-lg border border-stone-800 shadow-md">
-                Only {product.stockCount} pieces available in Nigerian studio
+                {product.stockCount} units available for same-day dispatch
               </div>
             )}
           </div>
@@ -99,13 +107,13 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all ${
+                  className={`w-20 h-20 rounded-2xl overflow-hidden border-2 bg-stone-950 p-2 flex items-center justify-center transition-all ${
                     activeImageIndex === idx
                       ? 'border-amber-400 scale-105 shadow-md shadow-amber-400/20'
                       : 'border-stone-800 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                  <img src={img} alt="Thumbnail" className="max-h-full max-w-full object-contain" />
                 </button>
               ))}
             </div>
@@ -117,21 +125,21 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
               <Truck className="w-5 h-5 text-amber-400 flex-shrink-0" />
               <div>
                 <p className="text-xs font-semibold text-white">Nationwide Delivery</p>
-                <p className="text-[11px] text-stone-400">Lagos, Abuja & nationwide</p>
+                <p className="text-[11px] text-stone-400">Lagos, Abuja & nationwide dispatch</p>
               </div>
             </div>
             <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-850 flex items-center gap-3">
               <ShieldCheck className="w-5 h-5 text-amber-400 flex-shrink-0" />
               <div>
-                <p className="text-xs font-semibold text-white">10-Year Warranty</p>
-                <p className="text-[11px] text-stone-400">Architectural joinery</p>
+                <p className="text-xs font-semibold text-white">Market Quality Verified</p>
+                <p className="text-[11px] text-stone-400">100% authentic, fresh & clean</p>
               </div>
             </div>
             <div className="p-4 rounded-2xl bg-stone-900/60 border border-stone-850 flex items-center gap-3">
               <Sparkles className="w-5 h-5 text-amber-400 flex-shrink-0" />
               <div>
-                <p className="text-xs font-semibold text-white">Atelier Authenticity</p>
-                <p className="text-[11px] text-stone-400">Numbered studio piece</p>
+                <p className="text-xs font-semibold text-white">Current Market Price</p>
+                <p className="text-[11px] text-stone-400">Fair transparent Naira rates</p>
               </div>
             </div>
           </div>
@@ -161,28 +169,35 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             </p>
           </div>
 
-          {/* Pricing in Naira (₦) */}
-          <div className="p-4 bg-stone-950 rounded-2xl border border-stone-800 space-y-1">
+          {/* Pricing in Naira (₦) with Market Price Tag */}
+          <div className="p-4 bg-stone-950 rounded-2xl border border-stone-800 space-y-2">
+            <div className="flex items-center justify-between text-xs text-stone-400 font-mono">
+              <span className="flex items-center gap-1 text-emerald-400">
+                <Tag className="w-3.5 h-3.5" />
+                <span>CURRENT MARKET PRICE TAG</span>
+              </span>
+              <span className="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded-full uppercase">
+                In Stock (Nigeria)
+              </span>
+            </div>
+
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-amber-400">
                 ₦{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span className="text-sm text-stone-500 line-through">
+                <span className="text-base text-stone-500 line-through">
                   ₦{product.originalPrice.toLocaleString()}
                 </span>
               )}
-              <span className="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded-full font-mono uppercase ml-auto">
-                In Stock (Nigeria)
-              </span>
             </div>
-            <p className="text-[11px] text-stone-400">Price in Nigerian Naira · Includes VAT & transit insurance</p>
+            <p className="text-[11px] text-stone-400">Price in Nigerian Naira (₦) · Direct transparent food market pricing</p>
           </div>
 
-          {/* Color Finish Picker */}
+          {/* Variant / Option Picker */}
           <div className="space-y-2.5 pt-2 border-t border-stone-850">
             <div className="flex justify-between text-xs">
-              <span className="text-stone-400 font-medium">Selected Finish / Material:</span>
+              <span className="text-stone-400 font-medium">Selected Packaging / Option:</span>
               <span className="text-white font-semibold">{selectedColor}</span>
             </div>
             <div className="flex items-center gap-2.5">
@@ -201,7 +216,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
                   {selectedColor === color.name && (
                     <Check
                       className={`w-4 h-4 ${
-                        color.hex === '#F5F5F0' || color.hex === '#E6E2DD' || color.hex === '#EBE7DE'
+                        color.hex === '#F5F5F0' || color.hex === '#E6E2DD' || color.hex === '#EBE7DE' || color.hex === '#FEF3C7' || color.hex === '#FEF08A'
                           ? 'text-stone-950'
                           : 'text-white'
                       }`}
@@ -235,83 +250,88 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
 
               <button
                 onClick={handleAdd}
-                className="flex-1 flex items-center justify-center gap-2.5 bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs sm:text-sm py-3.5 px-6 rounded-2xl shadow-xl shadow-amber-400/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 py-3.5 bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Add to Shopping Bag · ₦{(product.price * quantity).toLocaleString()}</span>
+                <span>Add to Shopping Bag (₦{(product.price * quantity).toLocaleString()})</span>
               </button>
             </div>
           </div>
 
-          {/* Specification Tabs */}
-          <div className="pt-4 border-t border-stone-850 space-y-3">
-            <div className="flex gap-2 p-1 bg-stone-950 rounded-xl border border-stone-800">
+          {/* Tabbed Specifications */}
+          <div className="pt-2">
+            <div className="flex border-b border-stone-800 text-xs">
               <button
                 onClick={() => setActiveTab('details')}
-                className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${
-                  activeTab === 'details' ? 'bg-stone-850 text-white shadow-sm' : 'text-stone-400'
+                className={`pb-2.5 px-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'details'
+                    ? 'border-amber-400 text-amber-400'
+                    : 'border-transparent text-stone-400 hover:text-white'
                 }`}
               >
-                Artisan Story
+                Description
               </button>
               <button
                 onClick={() => setActiveTab('specs')}
-                className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${
-                  activeTab === 'specs' ? 'bg-stone-850 text-white shadow-sm' : 'text-stone-400'
+                className={`pb-2.5 px-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'specs'
+                    ? 'border-amber-400 text-amber-400'
+                    : 'border-transparent text-stone-400 hover:text-white'
                 }`}
               >
-                Specifications
+                Specifications & Package
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors ${
-                  activeTab === 'reviews' ? 'bg-stone-850 text-white shadow-sm' : 'text-stone-400'
+                className={`pb-2.5 px-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'reviews'
+                    ? 'border-amber-400 text-amber-400'
+                    : 'border-transparent text-stone-400 hover:text-white'
                 }`}
               >
-                Reviews ({product.reviewCount})
+                Customer Reviews ({product.reviewCount})
               </button>
             </div>
 
-            {activeTab === 'details' && (
-              <div className="text-xs text-stone-300 leading-relaxed space-y-2 p-2">
+            <div className="py-4 text-xs text-stone-300 leading-relaxed min-h-[100px]">
+              {activeTab === 'details' && (
                 <p>{product.description}</p>
-                <p className="text-stone-400 text-[11px] pt-1">
-                  Crafted by <strong className="text-white">{product.designer}</strong> using ethically harvested FSC timber and organic non-toxic dyes.
-                </p>
-              </div>
-            )}
+              )}
 
-            {activeTab === 'specs' && (
-              <div className="text-xs space-y-2 p-2">
-                <div className="flex justify-between py-1.5 border-b border-stone-850">
-                  <span className="text-stone-400">Dimensions</span>
-                  <span className="text-white font-medium text-right">{product.dimensions}</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-stone-850">
-                  <span className="text-stone-400">Materials</span>
-                  <span className="text-white font-medium text-right">{product.materials.join(', ')}</span>
-                </div>
-                <div className="flex justify-between py-1.5 border-b border-stone-850">
-                  <span className="text-stone-400">Origin</span>
-                  <span className="text-white font-medium">{product.designer}</span>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div className="space-y-2.5 p-2 text-xs">
-                <div className="p-3 bg-stone-950 rounded-xl border border-stone-800 space-y-1.5">
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="font-semibold text-white">Chuka O. (Ikoyi, Lagos)</span>
-                    <span className="text-stone-400">3 days ago</span>
+              {activeTab === 'specs' && (
+                <div className="space-y-2">
+                  <div>
+                    <span className="text-stone-500 block text-[11px] uppercase font-mono">Pack Size / Net Content</span>
+                    <span className="text-white font-medium">{product.dimensions}</span>
                   </div>
-                  <div className="text-amber-400 text-xs">★★★★★</div>
-                  <p className="text-stone-300 leading-relaxed">
-                    "Delivered flawlessly to our Ikoyi penthouse. The bouclé fabric texture and joinery are museum-quality."
+                  <div>
+                    <span className="text-stone-500 block text-[11px] uppercase font-mono">Ingredients & Quality Standards</span>
+                    <ul className="list-disc list-inside text-stone-300 space-y-1 mt-1">
+                      {product.materials.map((m, i) => (
+                        <li key={i}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'reviews' && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold text-white">{product.rating}</span>
+                    <div>
+                      <div className="flex text-amber-400">
+                        {'★'.repeat(Math.floor(product.rating))}
+                      </div>
+                      <p className="text-[11px] text-stone-400">Based on {product.reviewCount} verified shopper purchases in Nigeria</p>
+                    </div>
+                  </div>
+                  <p className="text-stone-400 italic">
+                    "Delivered fast to my door in Lagos. Fresh and exactly as shown in the picture at honest market price!"
                   </p>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

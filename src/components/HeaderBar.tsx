@@ -3,14 +3,15 @@ import {
   Sparkles,
   ShoppingBag,
   Compass,
-  FileText,
   User,
   Code2,
   Bot,
   Link2,
   Heart,
+  LogOut,
+  UserCheck,
 } from 'lucide-react';
-import { ScreenId } from '../types';
+import { ScreenId, UserAccount } from '../types';
 
 interface HeaderBarProps {
   activeScreen: ScreenId;
@@ -21,6 +22,9 @@ interface HeaderBarProps {
   onOpenHotlinks: () => void;
   onOpenAssistant: () => void;
   totalHotlinksCount: number;
+  currentUser: UserAccount | null;
+  onOpenAuthModal: (mode: 'signup' | 'login') => void;
+  onSignOut: () => void;
 }
 
 export const HeaderBar: React.FC<HeaderBarProps> = ({
@@ -32,6 +36,9 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
   onOpenHotlinks,
   onOpenAssistant,
   totalHotlinksCount,
+  currentUser,
+  onOpenAuthModal,
+  onSignOut,
 }) => {
   return (
     <header className="bg-stone-950/95 backdrop-blur-md border-b border-stone-850 text-stone-100 sticky top-0 z-50">
@@ -41,7 +48,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
           onClick={() => onSelectScreen('explore')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-stone-950 shadow-md shadow-amber-500/10 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-stone-950 shadow-md shadow-amber-500/10 group-hover:scale-105 transition-transform flex-shrink-0">
             <Sparkles className="w-5 h-5 fill-stone-950" />
           </div>
           <div>
@@ -54,7 +61,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-stone-400 hidden sm:block">
-              Curated furniture, lighting, ceramics & luxury living
+              Shop at your pace and comfort · Current market prices for rice, oil, eggs, fish, vegetables & pasta
             </p>
           </div>
         </div>
@@ -70,7 +77,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Explore</span>
+            <span>Market (A-Z)</span>
           </button>
 
           <button
@@ -151,18 +158,42 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
             )}
           </button>
 
-          {/* Account Profile Link */}
-          <button
-            onClick={() => onSelectScreen('profile')}
-            title="Account Profile & Orders"
-            className={`p-2 rounded-xl transition-colors ${
-              activeScreen === 'profile'
-                ? 'bg-stone-800 text-amber-400 border border-stone-700'
-                : 'text-stone-300 hover:text-white hover:bg-stone-900 border border-transparent'
-            }`}
-          >
-            <User className="w-4 h-4" />
-          </button>
+          {/* Account Profile / Auth trigger */}
+          {currentUser ? (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => onSelectScreen('profile')}
+                title={`Logged in as ${currentUser.email}`}
+                className="flex items-center gap-1.5 text-xs bg-stone-900 hover:bg-stone-850 border border-stone-800 text-amber-300 px-2.5 py-1.5 rounded-xl transition-colors"
+              >
+                <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="max-w-[100px] truncate hidden md:inline">{currentUser.email}</span>
+              </button>
+              <button
+                onClick={onSignOut}
+                title="Sign out"
+                className="p-1.5 text-stone-400 hover:text-rose-400 hover:bg-stone-900 rounded-lg transition-colors hidden sm:block"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => onOpenAuthModal('login')}
+                className="text-xs text-stone-300 hover:text-white px-2.5 py-1.5 rounded-xl hover:bg-stone-900 transition-colors font-medium hidden sm:block"
+              >
+                Log in
+              </button>
+              <button
+                onClick={() => onOpenAuthModal('signup')}
+                className="flex items-center gap-1 text-xs font-semibold text-stone-950 bg-amber-400 hover:bg-amber-300 px-3 py-1.5 rounded-xl transition-all shadow-sm"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Sign up</span>
+              </button>
+            </div>
+          )}
 
           {/* Shopping Bag Button */}
           <button
@@ -195,7 +226,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
           }`}
         >
           <Compass className="w-3.5 h-3.5" />
-          <span>Explore</span>
+          <span>Market</span>
         </button>
 
         <button
@@ -219,10 +250,13 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
         </button>
 
         <button
-          onClick={onOpenImporter}
-          className="flex items-center gap-1 py-1 px-2 text-stone-400 hover:text-white"
+          onClick={() => onSelectScreen('profile')}
+          className={`flex items-center gap-1 py-1 px-2.5 rounded-lg ${
+            activeScreen === 'profile' ? 'text-amber-400 font-semibold' : 'text-stone-400'
+          }`}
         >
-          <span>+ Import</span>
+          <User className="w-3.5 h-3.5" />
+          <span>Account</span>
         </button>
       </div>
     </header>

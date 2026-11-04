@@ -1,5 +1,9 @@
 export type ScreenId = 'explore' | 'detail' | 'cart' | 'profile' | 'lookbook' | 'custom-html';
 
+export interface UserAccount {
+  email: string;
+  createdAt: string;
+}
 
 export interface Product {
   id: string;

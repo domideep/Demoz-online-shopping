@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
-import { ScreenId, Product, CartItem, HotlinkImageInfo } from './types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ScreenId, Product, CartItem, HotlinkImageInfo, UserAccount } from './types';
 import { PRODUCTS, STORIES, LOOKBOOK_STORIES, USER_ORDERS, HTML_PRESETS } from './data/mockData';
 import { HeaderBar } from './components/HeaderBar';
 import { Footer } from './components/Footer';
@@ -18,6 +18,7 @@ import { HtmlImportModal } from './components/HtmlImportModal';
 import { HotlinkInspectorModal } from './components/HotlinkInspectorModal';
 import { AiAssistantModal } from './components/AiAssistantModal';
 import { FloatingAssistantButton } from './components/FloatingAssistantButton';
+import { AuthModal } from './components/AuthModal';
 import { CheckCircle2, Code2, Sparkles, X, Bot } from 'lucide-react';
 
 export default function App() {
@@ -30,8 +31,20 @@ export default function App() {
       selectedColor: PRODUCTS[0].colors[0]?.name || 'Standard',
     },
   ]);
-  const [favorites, setFavorites] = useState<string[]>(['prod-1', 'prod-3']);
+  const [favorites, setFavorites] = useState<string[]>(['prod-mamas-pride-rice-50kg', 'prod-farm-eggs-crate']);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Authentication State
+  const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('demoz_current_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signup' | 'login'>('signup');
 
   // Assistant & Custom HTML state
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
@@ -39,6 +52,22 @@ export default function App() {
   const [isImporterOpen, setIsImporterOpen] = useState(false);
   const [isHotlinksOpen, setIsHotlinksOpen] = useState(false);
   const [showWelcomeNotice, setShowWelcomeNotice] = useState(true);
+
+  const handleOpenAuth = (mode: 'signup' | 'login') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
+
+  const handleAuthSuccess = (user: UserAccount, message: string) => {
+    setCurrentUser(user);
+    triggerToast(message);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('demoz_current_user');
+    setCurrentUser(null);
+    triggerToast('You have been signed out.');
+  };
 
   // Cart operations
   const handleAddToCart = (product: Product, quantity = 1, selectedColor?: string) => {
@@ -152,6 +181,9 @@ export default function App() {
         onOpenHotlinks={() => setIsHotlinksOpen(true)}
         onOpenAssistant={() => setIsAssistantOpen(true)}
         totalHotlinksCount={allHotlinkedImages.length}
+        currentUser={currentUser}
+        onOpenAuthModal={handleOpenAuth}
+        onSignOut={handleSignOut}
       />
 
       {/* Helpful Quick Banner for pasting HTML/images & AI Assistant */}
@@ -161,8 +193,15 @@ export default function App() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
               <p className="text-stone-300">
-                <span className="font-semibold text-white">Need guidance or have your own HTML snippet?</span>{' '}
-                Ask our <button onClick={() => setIsAssistantOpen(true)} className="text-amber-400 font-semibold underline underline-offset-2 hover:text-amber-300">AI Assistant</button> for help, or use the <span className="text-amber-400 font-medium">"Import HTML"</span> button to render custom screens.
+                <span className="font-semibold text-white">Shop at your pace and comfort.</span>{' '}
+                Explore authentic Nigerian grain foodstuffs, Kings cooking oils, and groceries. Need assistance? Ask our{' '}
+                <button
+                  onClick={() => setIsAssistantOpen(true)}
+                  className="text-amber-400 font-semibold underline underline-offset-2 hover:text-amber-300"
+                >
+                  AI Guide
+                </button>
+                , or sign up with just email & password.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -174,9 +213,7 @@ export default function App() {
                 <span>Ask AI</span>
               </button>
               <button
-                onClick={() => {
-                  setIsImporterOpen(true);
-                }}
+                onClick={() => setIsImporterOpen(true)}
                 className="flex items-center gap-1 text-[11px] font-semibold text-slate-950 bg-amber-400 hover:bg-amber-300 px-2.5 py-1 rounded-md transition-colors"
               >
                 <Code2 className="w-3 h-3" />
@@ -230,6 +267,9 @@ export default function App() {
           <ProfileScreen
             favorites={favorites}
             onSelectProduct={handleSelectProduct}
+            currentUser={currentUser}
+            onOpenAuthModal={handleOpenAuth}
+            onSignOut={handleSignOut}
           />
         )}
 
@@ -246,11 +286,15 @@ export default function App() {
         )}
       </main>
 
-      {/* Full Website Footer */}
+      {/* Full Website Footer with "Shop with us today" & email/password signup */}
       <Footer
         onSelectScreen={setActiveScreen}
         onOpenAssistant={() => setIsAssistantOpen(true)}
         onOpenImporter={() => setIsImporterOpen(true)}
+        currentUser={currentUser}
+        onAuthSuccess={handleAuthSuccess}
+        onSignOut={handleSignOut}
+        onOpenAuthModal={handleOpenAuth}
       />
 
       {/* Interactive Toast Notification */}
@@ -273,6 +317,14 @@ export default function App() {
         onClose={() => setIsAssistantOpen(false)}
         currentScreen={activeScreen}
         onNavigateScreen={setActiveScreen}
+      />
+
+      {/* Auth Modal (Sign Up & Login - Only Email & Password required) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+        onAuthSuccess={handleAuthSuccess}
       />
 
       {/* HTML Import Modal */}

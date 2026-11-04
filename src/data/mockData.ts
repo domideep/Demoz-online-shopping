@@ -1,224 +1,289 @@
 import { Product, UserOrder, HtmlPreset } from '../types';
 
 export const CATEGORIES = [
-  { id: 'all', label: 'All Items' },
-  { id: 'furniture', label: 'Furniture' },
-  { id: 'lighting', label: 'Lighting' },
-  { id: 'ceramics', label: 'Ceramics' },
-  { id: 'textiles', label: 'Textiles' },
-  { id: 'objects', label: 'Art Objects' },
+  { id: 'all', label: 'All Food Items' },
+  { id: 'grains', label: 'Rice & Spaghetti' },
+  { id: 'oil', label: 'Cooking Oil' },
+  { id: 'proteins', label: 'Fish & Poultry Eggs' },
+  { id: 'fresh', label: 'Fresh Market Veggies' },
+  { id: 'canned', label: 'Canned Provisions' },
 ];
 
 export const STORIES = [
   {
     id: 's1',
-    name: 'New Drops',
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+    name: "Mama's Rice",
+    image: '/assets/aistudio/ktt7_4d78c037.jpg',
     hasUnseen: true,
   },
   {
     id: 's2',
-    name: 'Milano 26',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80',
+    name: 'SunCo 5L Oil',
+    image: '/assets/aistudio/ktt10_1af1158d.jpg',
     hasUnseen: true,
   },
   {
     id: 's3',
-    name: 'Atelier',
-    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=400&q=80',
+    name: 'Farm Eggs',
+    image: '/assets/aistudio/ktt11_d9bc365c.jpg',
     hasUnseen: false,
   },
   {
     id: 's4',
-    name: 'Ceramics',
-    image: 'https://images.unsplash.com/photo-1579656381226-5fc0f0100c3b?auto=format&fit=crop&w=400&q=80',
-    hasUnseen: false,
+    name: 'Frozen Titus',
+    image: '/assets/aistudio/ktt1_4c4ae2eb.png',
+    hasUnseen: true,
   },
   {
     id: 's5',
-    name: 'Lighting',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
-    hasUnseen: true,
+    name: 'Fresh Veggies',
+    image: '/assets/aistudio/ktt4_5294041e.jpg',
+    hasUnseen: false,
+  },
+  {
+    id: 's6',
+    name: 'Titus Sardines',
+    image: '/assets/aistudio/ktt3_74e9fe3f.jpg',
+    hasUnseen: false,
+  },
+  {
+    id: 's7',
+    name: 'Spaghetti',
+    image: '/assets/aistudio/ktt2_099e01be.jpg',
+    hasUnseen: false,
   },
 ];
 
+// PRODUCTS CORRESPONDING TO THE USER'S PHOTOS WITH CURRENT NIGERIAN MARKET PRICES
 export const PRODUCTS: Product[] = [
   {
-    id: 'prod-1',
-    name: 'Kanso Curved Oak Lounge Chair',
-    subtitle: 'Sculptural Solid White Oak with Bouclé Upholstery',
-    category: 'furniture',
-    price: 495,
-    originalPrice: 580,
+    id: 'prod-farm-eggs-crate',
+    name: 'Fresh Farm Eggs (Crate of 30 Jumbo Eggs)',
+    subtitle: 'Golden Yolk Protein-Rich Table Eggs Direct from Layer Farms',
+    category: 'proteins',
+    price: 5500,
+    originalPrice: 6200,
     rating: 4.9,
-    reviewCount: 142,
+    reviewCount: 380,
     inStock: true,
-    stockCount: 4,
+    stockCount: 150,
     description:
-      'Engineered with organic ergonomics, the Kanso lounge chair pairs steam-bent solid white oak with high-density foam wrapped in Belgian wool-bouclé. Perfect for modern living and reading sanctuaries.',
-    materials: ['Solid White Oak', 'Belgian Wool Bouclé', 'Hand-rubbed Organic Oil Finish'],
-    dimensions: '32" W × 34" D × 29" H · Seat Height 16"',
-    designer: 'Studio Nørrebro, Copenhagen',
+      'Crate of 30 carefully inspected jumbo-sized fresh table eggs. Sourced daily from bio-secure layer farms in Nigeria. Features sturdy clean shells and rich golden yolks packed with natural protein, vitamin D, and choline. Ideal for breakfast boiling, frying, baking, and family nourishment.',
+    materials: ['30 Farm Fresh Grade-A Jumbo Eggs', 'Shock-Absorbent Paper Pulp Crate'],
+    dimensions: 'Standard 30-Egg Cardboard Crate (30cm x 30cm)',
+    designer: 'Demoz Agro Layer Farms Nigeria',
     images: [
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+      '/assets/aistudio/ktt11_d9bc365c.jpg',
     ],
     colors: [
-      { name: 'Oatmeal Wool', hex: '#E6E2DD' },
-      { name: 'Charcoal Slub', hex: '#2B2B2B' },
-      { name: 'Terracotta', hex: '#A85D47' },
-    ],
-    isFeatured: true,
-    isNew: true,
-  },
-  {
-    id: 'prod-2',
-    name: 'Aura Matte Cast-Iron Pendant Lamp',
-    subtitle: 'Warm Ambient Diffuser with Brushed Brass Finial',
-    category: 'lighting',
-    price: 185,
-    originalPrice: 220,
-    rating: 4.8,
-    reviewCount: 89,
-    inStock: true,
-    stockCount: 12,
-    description:
-      'Spun from raw blackened cast-iron with an interior parabolic reflector in satin gold. Casts a soft 2700K downward glow designed to anchor dining tables and kitchen islands.',
-    materials: ['Blackened Cast Iron', 'Satin Brass Hardware', 'Braided Linen Cord'],
-    dimensions: '14" Dia × 9" H · 72" Adjustable Drop Cord',
-    designer: 'Elena Vance Atelier',
-    images: [
-      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    ],
-    colors: [
-      { name: 'Matte Obsidian', hex: '#1C1C1E' },
-      { name: 'Chalk White', hex: '#F5F5F0' },
-      { name: 'Raw Brass', hex: '#C5A059' },
+      { name: 'Natural Brown Shell', hex: '#D97706' },
+      { name: 'Warm Cream Shell', hex: '#FEF3C7' },
     ],
     isFeatured: true,
     isNew: false,
   },
   {
-    id: 'prod-3',
-    name: 'Vessel No. 4 Ribbed Stoneware Vase',
-    subtitle: 'Wheel-thrown Sand Clay with Unglazed Bisque Texture',
-    category: 'ceramics',
-    price: 94,
+    id: 'prod-frozen-titus-mackerel',
+    name: 'Fresh Frozen Titus Mackerel Fish (10kg Carton)',
+    subtitle: 'Ice-Packed Deep Sea Atlantic Titus Mackerel in Protective Liner',
+    category: 'proteins',
+    price: 45000,
+    originalPrice: 50000,
     rating: 5.0,
-    reviewCount: 64,
+    reviewCount: 290,
     inStock: true,
-    stockCount: 8,
+    stockCount: 45,
     description:
-      'Individually thrown using coarse sand-speckled stoneware clay. Left unglazed on the exterior for a tactile stone feel with a watertight interior glaze.',
-    materials: ['Speckled Stoneware Clay', 'Interior Non-porous Glaze'],
-    dimensions: '7.5" Dia × 11" H · 3.2 lbs',
-    designer: 'Kyoto Folk Pottery Project',
+      'Whole carton of premium frozen Atlantic Titus (Mackerel) fish, packed in food-grade blue thermal liner bags to retain maximum oceanic freshness and flavor. Firm silver-and-blue skin, rich in natural heart-healthy Omega-3 fatty acids. Ideal for grilling (barbecue/point-and-kill), stew boiling, smoking, or pan frying.',
+    materials: ['Wild Caught Atlantic Mackerel (Scomber scombrus)', 'Thermal Poly Bag & Export Carton'],
+    dimensions: '10kg Wholesale Master Carton (approx. 24-28 whole fish)',
+    designer: 'Atlantic Cold Stores & Seafood Nigeria',
     images: [
-      'https://images.unsplash.com/photo-1579656381226-5fc0f0100c3b?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?auto=format&fit=crop&w=1200&q=80',
+      '/assets/aistudio/ktt1_4c4ae2eb.png',
     ],
     colors: [
-      { name: 'Bisque Sand', hex: '#DDD2C4' },
-      { name: 'Smoked Sage', hex: '#8E9A8E' },
+      { name: 'Ocean Silver & Blue', hex: '#0284C7' },
     ],
-    isFeatured: false,
+    isFeatured: true,
     isNew: true,
   },
   {
-    id: 'prod-4',
-    name: 'Woven Nordic Lowland Credenza',
-    subtitle: 'Smoked Walnut Frame with Hand-Woven Cane Doors',
-    category: 'furniture',
-    price: 890,
-    originalPrice: 1050,
+    id: 'prod-market-fresh-veggies',
+    name: 'Fresh Market Farm Produce & Soup Vegetables Basket',
+    subtitle: 'Colorful Basket of Tomatoes, Rodo Peppers, Onions, Carrots, Cucumbers & Greens',
+    category: 'fresh',
+    price: 12500,
+    originalPrice: 15000,
     rating: 4.9,
-    reviewCount: 37,
-    inStock: true,
-    stockCount: 2,
-    description:
-      'Seamless media console and living credenza crafted from FSC-certified European smoked walnut. Features four cane weave doors that allow remote control IR pass-through and ventilation.',
-    materials: ['European Smoked Walnut', 'Natural Rattan Cane', 'Soft-close Blum Hinges'],
-    dimensions: '68" W × 19" D × 26" H',
-    designer: 'Lars Halvorsen',
-    images: [
-      'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
-    ],
-    colors: [
-      { name: 'Smoked Walnut', hex: '#4A3728' },
-      { name: 'Bleached Ash', hex: '#E4DDD3' },
-    ],
-    isFeatured: true,
-    isNew: false,
-  },
-  {
-    id: 'prod-5',
-    name: 'Washed Belgian Linen Duvet Set',
-    subtitle: 'Stone-Washed Flax with Mother of Pearl Buttons',
-    category: 'textiles',
-    price: 240,
-    rating: 4.7,
     reviewCount: 215,
     inStock: true,
-    stockCount: 15,
+    stockCount: 60,
     description:
-      'Woven from 100% French and Belgian flax linen. Pre-washed with pumice stones for an effortless, buttery-soft drape that naturally stays cool in summer and cozy in winter.',
-    materials: ['100% Certified Flax Linen (175 GSM)', 'Natural Shell Closures'],
-    dimensions: 'Queen (92" × 96") / King (108" × 96")',
-    designer: 'Maison D’Artisan',
+      'Generous assorted family crate of hand-picked fresh garden produce from Jos and Northern farm belts. Contains firm red tomatoes, fiery Scotch bonnet rodo, tatase bell peppers, sweet carrots, crisp cucumbers, purple onions, green cabbage, sweet corn, broccoli, scallions, and fresh soup greens.',
+    materials: [
+      'Fresh Red Tomatoes & Scotch Bonnet Rodo Peppers',
+      'Tatase Bell Peppers & Onions',
+      'Crunchy Carrots, Cucumbers & Sweet Corn',
+      'Garden Broccoli, Scallions & Fresh Herbs',
+    ],
+    dimensions: 'Jumbo Assorted Vegetable Crate (approx. 12kg total produce)',
+    designer: 'Demoz Green Harvest Co-op',
     images: [
-      'https://images.unsplash.com/photo-1540518614846-7ede433c4570?auto=format&fit=crop&w=1200&q=80',
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+      '/assets/aistudio/ktt4_5294041e.jpg',
     ],
     colors: [
-      { name: 'Pale Bone', hex: '#EBE7DE' },
-      { name: 'Misty Olive', hex: '#7E8775' },
-      { name: 'Warm Clay', hex: '#B8826D' },
+      { name: 'Vibrant Garden Mix', hex: '#16A34A' },
+      { name: 'Ripe Tomato Red', hex: '#DC2626' },
+      { name: 'Sunburst Yellow', hex: '#EAB308' },
+    ],
+    isFeatured: true,
+    isNew: true,
+  },
+  {
+    id: 'prod-golden-penny-spaghetti-2pack',
+    name: 'Golden Penny Spaghetti (500g Durum Wheat Pasta · 2-Pack Bundle)',
+    subtitle: 'Non-Sticky Long Strand Pasta Enriched with Vitamin A (2 x 500g Packs)',
+    category: 'grains',
+    price: 2500,
+    originalPrice: 2800,
+    rating: 4.8,
+    reviewCount: 440,
+    inStock: true,
+    stockCount: 200,
+    description:
+      'Two 500g retail packs of Nigeria’s most trusted long-strand spaghetti. Milled from 100% premium durum wheat semolina. Retains firm al dente texture without sticking or breaking during boiling. Pairs effortlessly with tomato stew, fried fish, minced meat, boiled eggs, and stir-fry veggies.',
+    materials: ['100% Durum Wheat Semolina', 'Enriched with Essential Vitamin A'],
+    dimensions: 'Bundle of 2 x 500g Sealed Foil Packs (1kg total)',
+    designer: 'Flour Mills of Nigeria Plc (Golden Penny Foods)',
+    images: [
+      '/assets/aistudio/ktt2_099e01be.jpg',
+    ],
+    colors: [
+      { name: 'Golden Amber Semolina', hex: '#F59E0B' },
     ],
     isFeatured: false,
-    isNew: true,
+    isNew: false,
+  },
+  {
+    id: 'prod-mamas-pride-rice-50kg',
+    name: "Mama's Pride Parboiled Rice (50kg Net Bag · Olam)",
+    subtitle: 'Premium Long Grain Destoned Nigerian Parboiled Rice from Olam',
+    category: 'grains',
+    price: 88500,
+    originalPrice: 95000,
+    rating: 5.0,
+    reviewCount: 520,
+    inStock: true,
+    stockCount: 80,
+    description:
+      "Original 50kg bag of Mama's Pride premium parboiled long grain rice processed by Olam Nigeria. Machine-destoned, 100% stone-free, and uniform in size. Features a high swelling ratio and does not turn soggy, yielding fluffy, aromatic, distinct grains perfect for Nigerian party jollof rice, fried rice, and white rice with pepper stew.",
+    materials: ['100% Clean Parboiled Paddy Long Grain Rice', 'Machine Destoned & Polished'],
+    dimensions: '50kg Heavy-Duty Woven Polypropylene Sack',
+    designer: 'Olam Agri Nigeria Limited',
+    images: [
+      '/assets/aistudio/ktt7_4d78c037.jpg',
+    ],
+    colors: [
+      { name: 'Classic Golden Parboiled', hex: '#FEF08A' },
+    ],
+    isFeatured: true,
+    isNew: false,
+  },
+  {
+    id: 'prod-sunco-oil-5l',
+    name: 'SunCo Pure Refined Vegetable Cooking Oil (5 Litres Gallon)',
+    subtitle: 'Crystal Clear 5x Filtered Cooking Oil Fortified with Vitamin A',
+    category: 'oil',
+    price: 19500,
+    originalPrice: 22000,
+    rating: 4.9,
+    reviewCount: 340,
+    inStock: true,
+    stockCount: 95,
+    description:
+      'SunCo 5-Litre transparent golden cooking oil produced with advanced 5x refining and 2x filtration technology. Fortified with essential Vitamin A, zero cholesterol, and clear non-congealing consistency. Delivers high heat resistance for deep frying akara, dodo, chicken, and preparing mouthwatering Nigerian stews and soups without greasy residue.',
+    materials: ['100% Refined Pure Palm Fruit & Vegetable Oil', 'Fortified with Vitamin A'],
+    dimensions: '5 Litres Heavy Gallon with Ergonomic Pouring Handle',
+    designer: 'PT Musim Mas / SunCo Superbrands',
+    images: [
+      '/assets/aistudio/ktt10_1af1158d.jpg',
+    ],
+    colors: [
+      { name: 'Crystal Clear Amber', hex: '#F59E0B' },
+    ],
+    isFeatured: true,
+    isNew: false,
+  },
+  {
+    id: 'prod-titus-sardines-5can',
+    name: 'Titus Sardines in Pure Vegetable Oil (5 Cans Value Pack)',
+    subtitle: 'Original Atlantic Wild Sardines Packed in Refined Oil with Pull-Tab Lid',
+    category: 'canned',
+    price: 5200,
+    originalPrice: 5800,
+    rating: 5.0,
+    reviewCount: 460,
+    inStock: true,
+    stockCount: 160,
+    description:
+      'Original Titus Sardines imported in pull-tab lithographed gold tins. Packed in nutritious refined vegetable oil and delicate natural brine. Rich in calcium, wild marine protein, and essential Omega-3. The indispensable Nigerian food staple for quick spaghetti dishes, warm agege bread, noodles, and savory stews.',
+    materials: ['Wild Atlantic Sardine Fish (Sardina pilchardus)', 'Refined Vegetable Oil & Salt'],
+    dimensions: 'Value Pack of 5 Metal Pull-Tab Cans (125g Net Weight each)',
+    designer: 'Unimer / Titus Brand Group',
+    images: [
+      '/assets/aistudio/ktt3_74e9fe3f.jpg',
+    ],
+    colors: [
+      { name: 'Heritage Gold & Red', hex: '#DC2626' },
+    ],
+    isFeatured: false,
+    isNew: false,
   },
 ];
 
 export const USER_ORDERS: UserOrder[] = [
   {
     id: 'ORD-9842',
-    date: 'Oct 29, 2026',
+    date: 'Nov 02, 2026',
     status: 'In Transit',
-    total: 589,
+    total: 108000,
     itemsCount: 2,
-    trackingNumber: 'FDX-883920194US',
-    estimatedDelivery: 'Tomorrow by 4:00 PM',
+    trackingNumber: 'FDX-883920194NG',
+    estimatedDelivery: 'Tomorrow by 2:00 PM (Lagos Express Food Van)',
     items: [
       {
-        title: 'Kanso Curved Oak Lounge Chair',
-        image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
-        price: 495,
+        title: "Mama's Pride Parboiled Rice (50kg Net Bag · Olam)",
+        image: '/assets/aistudio/ktt7_4d78c037.jpg',
+        price: 88500,
         qty: 1,
       },
       {
-        title: 'Vessel No. 4 Ribbed Stoneware Vase',
-        image: 'https://images.unsplash.com/photo-1579656381226-5fc0f0100c3b?auto=format&fit=crop&w=400&q=80',
-        price: 94,
+        title: 'SunCo Pure Refined Vegetable Cooking Oil (5 Litres Gallon)',
+        image: '/assets/aistudio/ktt10_1af1158d.jpg',
+        price: 19500,
         qty: 1,
       },
     ],
   },
   {
     id: 'ORD-9701',
-    date: 'Oct 14, 2026',
+    date: 'Oct 28, 2026',
     status: 'Delivered',
-    total: 185,
-    itemsCount: 1,
-    trackingNumber: 'UPS-1049285038',
-    estimatedDelivery: 'Delivered on front porch',
+    total: 50500,
+    itemsCount: 2,
+    trackingNumber: 'DEL-1049285038NG',
+    estimatedDelivery: 'Delivered to Lekki Phase 1, Lagos',
     items: [
       {
-        title: 'Aura Matte Cast-Iron Pendant Lamp',
-        image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=400&q=80',
-        price: 185,
+        title: 'Fresh Frozen Titus Mackerel Fish (10kg Carton)',
+        image: '/assets/aistudio/ktt1_4c4ae2eb.png',
+        price: 45000,
+        qty: 1,
+      },
+      {
+        title: 'Fresh Farm Eggs (Crate of 30 Jumbo Eggs)',
+        image: '/assets/aistudio/ktt11_d9bc365c.jpg',
+        price: 5500,
         qty: 1,
       },
     ],
@@ -228,47 +293,47 @@ export const USER_ORDERS: UserOrder[] = [
 export const LOOKBOOK_STORIES = [
   {
     id: 'lb-1',
-    title: 'The Kyoto Residency',
-    photographer: 'Kenji Takahashi',
-    date: 'Autumn 2026',
-    coverImage: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    title: 'Nigerian Kitchen & Pantry Essentials',
+    photographer: 'Adebayo Johnson',
+    date: 'Market Edition 2026',
+    coverImage: '/assets/aistudio/ktt4_5294041e.jpg',
     hotspots: [
       {
-        x: 48,
-        y: 62,
-        title: 'Kanso Oak Armchair',
-        price: '₦495',
-        productId: 'prod-1',
+        x: 35,
+        y: 45,
+        title: "Mama's Pride 50kg Rice",
+        price: '₦88,500',
+        productId: 'prod-mamas-pride-rice-50kg',
       },
       {
-        x: 72,
-        y: 40,
-        title: 'Aura Black Pendant',
-        price: '₦185',
-        productId: 'prod-2',
+        x: 70,
+        y: 50,
+        title: 'SunCo 5L Cooking Oil',
+        price: '₦19,500',
+        productId: 'prod-sunco-oil-5l',
       },
     ],
   },
   {
     id: 'lb-2',
-    title: 'Organic Texture & Monolithic Forms',
-    photographer: 'Astrid Lind',
-    date: 'Winter Collection',
-    coverImage: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80',
+    title: 'Farm Fresh Proteins & Produce Basket',
+    photographer: 'Chioma Nwosu',
+    date: 'Daily Harvest',
+    coverImage: '/assets/aistudio/ktt11_d9bc365c.jpg',
     hotspots: [
       {
-        x: 35,
-        y: 70,
-        title: 'Nordic Lowland Credenza',
-        price: '₦890',
-        productId: 'prod-4',
+        x: 45,
+        y: 50,
+        title: 'Fresh Farm Eggs (Crate of 30)',
+        price: '₦5,500',
+        productId: 'prod-farm-eggs-crate',
       },
       {
-        x: 60,
+        x: 75,
         y: 35,
-        title: 'Vessel No. 4 Vase',
-        price: '₦94',
-        productId: 'prod-3',
+        title: 'Frozen Titus Fish (10kg Carton)',
+        price: '₦45,000',
+        productId: 'prod-frozen-titus-mackerel',
       },
     ],
   },
@@ -276,116 +341,101 @@ export const LOOKBOOK_STORIES = [
 
 export const HTML_PRESETS: HtmlPreset[] = [
   {
-    id: 'preset-furniture',
-    title: 'Nordic Studio & Living Room',
-    category: 'Design & Interiors',
-    description: 'Clean architectural cards with hotlinked furniture and ambient lighting photography.',
-    htmlContent: `<div class="screen-container font-sans bg-stone-900 text-stone-100 p-5 rounded-2xl max-w-md mx-auto space-y-5">
-  <div class="flex justify-between items-center border-b border-stone-800 pb-3">
+    id: 'preset-nigerian-food',
+    title: 'Demoz Fresh Nigerian Food Market',
+    category: 'Market & Groceries',
+    description: "Mama's Pride 50kg rice, SunCo 5L oil, fresh farm eggs, and frozen Titus fish with live photos and Naira prices.",
+    htmlContent: `<div class="screen-container font-sans bg-stone-900 text-stone-100 p-5 rounded-2xl max-w-md mx-auto space-y-4">
+  <div class="flex justify-between items-center border-b border-stone-850 pb-3">
     <div>
-      <p class="text-xs tracking-widest uppercase text-stone-400">Atelier Studio</p>
-      <h2 class="text-xl font-serif text-white">Nordic Living 2026</h2>
+      <p class="text-xs tracking-widest uppercase text-emerald-400 font-mono">Demoz Nigerian Market</p>
+      <h2 class="text-lg font-serif font-bold text-white">Current Market Price Foodstuffs</h2>
     </div>
-    <span class="text-xs px-2.5 py-1 bg-stone-800 rounded-full text-stone-300">Live Edition</span>
+    <span class="text-xs px-2.5 py-1 bg-emerald-950 text-emerald-400 rounded-full font-mono">NGN (₦)</span>
   </div>
 
   <div class="relative rounded-xl overflow-hidden shadow-lg group">
-    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80" alt="Nordic Studio Living Room" class="w-full h-52 object-cover" />
-    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4">
-      <span class="text-xs text-amber-300 font-medium">Spotlight Space</span>
-      <h3 class="text-lg font-medium text-white">The Minimalist Sanctuary</h3>
-      <p class="text-xs text-stone-300">Curated with natural light, bouclé textures, and warm timber tones.</p>
+    <img src="/assets/aistudio/ktt7_4d78c037.jpg" alt="Mama's Pride 50kg Rice" class="w-full h-52 object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-4">
+      <span class="text-xs text-amber-400 font-semibold uppercase font-mono">50kg Bag · Olam</span>
+      <h3 class="text-lg font-medium text-white">Mama's Pride Parboiled Rice</h3>
+      <p class="text-sm font-bold text-amber-400">₦88,500 <span class="line-through text-stone-400 text-xs font-normal">₦95,000</span></p>
     </div>
   </div>
 
   <div class="grid grid-cols-2 gap-3">
-    <div class="bg-stone-800/70 p-3 rounded-xl border border-stone-700/50">
-      <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=500&q=80" alt="Lounge Chair" class="w-full h-28 object-cover rounded-lg mb-2" />
-      <h4 class="text-sm font-medium text-white truncate">Oak Lounge Chair</h4>
-      <p class="text-xs text-stone-400">$495 · In Stock</p>
+    <div class="bg-stone-950 p-3 rounded-xl border border-stone-800">
+      <img src="/assets/aistudio/ktt10_1af1158d.jpg" alt="SunCo 5L Oil" class="w-full h-28 object-contain rounded-lg mb-2" />
+      <h4 class="text-xs font-medium text-white truncate">SunCo 5L Cooking Oil</h4>
+      <p class="text-xs text-amber-400 font-bold">₦19,500</p>
     </div>
-    <div class="bg-stone-800/70 p-3 rounded-xl border border-stone-700/50">
-      <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=500&q=80" alt="Matte Pendant Lamp" class="w-full h-28 object-cover rounded-lg mb-2" />
-      <h4 class="text-sm font-medium text-white truncate">Matte Pendant Lamp</h4>
-      <p class="text-xs text-stone-400">$185 · Free Delivery</p>
+    <div class="bg-stone-950 p-3 rounded-xl border border-stone-800">
+      <img src="/assets/aistudio/ktt11_d9bc365c.jpg" alt="Fresh Farm Eggs" class="w-full h-28 object-contain rounded-lg mb-2" />
+      <h4 class="text-xs font-medium text-white truncate">Farm Eggs (30-Crate)</h4>
+      <p class="text-xs text-amber-400 font-bold">₦5,500</p>
     </div>
   </div>
 </div>`,
   },
   {
-    id: 'preset-cafe',
-    title: 'Artisan Cafe & Coffee Roasters',
-    category: 'Food & Hospitality',
-    description: 'Specialty espresso bar screens with hotlinked latte art, pastries, and barista atmosphere.',
+    id: 'preset-seafood-veggies',
+    title: 'Frozen Titus Fish & Farm Vegetables',
+    category: 'Fish & Fresh Farm',
+    description: '10kg carton of iced Atlantic Titus fish alongside fresh soup vegetable market produce.',
     htmlContent: `<div class="screen-container bg-neutral-950 text-neutral-100 p-5 rounded-2xl max-w-md mx-auto space-y-4">
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="w-10 h-10 rounded-full object-cover border border-amber-500/40" alt="Barista Ava" />
-      <div>
-        <h3 class="text-sm font-semibold text-white">Roastery Club</h3>
-        <p class="text-xs text-neutral-400">Order at Table 04 · Ready in 6m</p>
-      </div>
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+      <h3 class="text-sm font-semibold text-white">Fresh Proteins & Farm Produce</h3>
     </div>
-    <button class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg transition-colors">Reorder</button>
+    <span class="text-xs text-amber-400 font-mono">Current Market Prices</span>
   </div>
 
   <div class="rounded-xl overflow-hidden relative">
-    <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1000&q=80" alt="Espresso Machine Pour" class="w-full h-44 object-cover" />
-    <div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs">
-      <span class="text-amber-400 font-semibold">Single Origin:</span> Ethiopia Yirgacheffe
+    <img src="/assets/aistudio/ktt1_4c4ae2eb.png" alt="Fresh Frozen Titus Mackerel" class="w-full h-44 object-cover" />
+    <div class="absolute bottom-2 left-2 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs">
+      <span class="text-amber-400 font-bold">10kg Carton Titus Fish:</span> ₦45,000
     </div>
   </div>
 
-  <div class="space-y-2">
-    <div class="flex items-center gap-3 p-2.5 bg-neutral-900 rounded-xl border border-neutral-800">
-      <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=300&q=80" alt="Oat Cortado" class="w-14 h-14 object-cover rounded-lg" />
-      <div class="flex-1 min-w-0">
-        <h4 class="text-sm font-medium text-white truncate">Velvet Oat Flat White</h4>
-        <p class="text-xs text-neutral-400">Double shot, steamed Minor Figures oat</p>
-      </div>
-      <span class="text-sm font-semibold text-amber-400">$5.50</span>
-    </div>
-    <div class="flex items-center gap-3 p-2.5 bg-neutral-900 rounded-xl border border-neutral-800">
-      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=300&q=80" alt="Cardamom Buns" class="w-14 h-14 object-cover rounded-lg" />
-      <div class="flex-1 min-w-0">
-        <h4 class="text-sm font-medium text-white truncate">Swedish Cardamom Knot</h4>
-        <p class="text-xs text-neutral-400">Fresh baked daily with crushed pearl sugar</p>
-      </div>
-      <span class="text-sm font-semibold text-amber-400">$4.75</span>
+  <div class="flex items-center gap-3 p-3 bg-neutral-900 rounded-xl border border-neutral-800">
+    <img src="/assets/aistudio/ktt4_5294041e.jpg" alt="Market Produce" class="w-16 h-16 object-cover rounded-lg" />
+    <div class="flex-1 min-w-0">
+      <h4 class="text-xs font-medium text-white truncate">Fresh Soup Vegetables Crate</h4>
+      <p class="text-[11px] text-neutral-400">Tomatoes, rodo, onions, carrots</p>
+      <span class="text-xs font-bold text-amber-400">₦12,500</span>
     </div>
   </div>
 </div>`,
   },
   {
-    id: 'preset-travel',
-    title: 'Boutique Escapes & Villa Retreats',
-    category: 'Travel & Stays',
-    description: 'High-end travel screen with scenic photography, rate breakdown, and instant booking CTA.',
+    id: 'preset-pasta-sardines',
+    title: 'Golden Penny Spaghetti & Titus Sardines',
+    category: 'Grains & Provisions',
+    description: 'Golden Penny durum wheat spaghetti bundle with original Titus sardines.',
     htmlContent: `<div class="screen-container bg-slate-900 text-slate-100 p-5 rounded-2xl max-w-md mx-auto space-y-4">
   <div class="flex justify-between items-center">
-    <span class="text-xs tracking-wider uppercase text-emerald-400 font-semibold">Verified Sanctuary</span>
-    <span class="text-xs text-slate-400">4.96 ★ (218 reviews)</span>
+    <span class="text-xs tracking-wider uppercase text-emerald-400 font-semibold">Quick Meals Bundle</span>
+    <span class="text-xs text-slate-400">In Stock</span>
   </div>
 
-  <div class="relative rounded-2xl overflow-hidden shadow-xl">
-    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80" alt="Luxury Villa Pool" class="w-full h-56 object-cover" />
-    <div class="absolute top-3 right-3 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-xs text-white">
-      Private Infinity Pool
+  <div class="grid grid-cols-2 gap-3">
+    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+      <img src="/assets/aistudio/ktt2_099e01be.jpg" alt="Spaghetti" class="w-full h-28 object-contain rounded-lg mb-1" />
+      <h4 class="text-xs font-medium text-white truncate">Golden Penny Spaghetti (2-Pack)</h4>
+      <p class="text-xs text-amber-400 font-bold">₦2,500</p>
     </div>
-  </div>
-
-  <div>
-    <h3 class="text-lg font-serif font-medium text-white">Villa Caelum · Amalfi Coast</h3>
-    <p class="text-xs text-slate-300 mt-1">Clifftop panoramic terrace overlooking Positano Bay with private funicular access.</p>
+    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+      <img src="/assets/aistudio/ktt3_74e9fe3f.jpg" alt="Titus Sardines" class="w-full h-28 object-contain rounded-lg mb-1" />
+      <h4 class="text-xs font-medium text-white truncate">Titus Sardines (5 Cans)</h4>
+      <p class="text-xs text-amber-400 font-bold">₦5,200</p>
+    </div>
   </div>
 
   <div class="flex items-center justify-between pt-2 border-t border-slate-800">
-    <div>
-      <span class="text-lg font-bold text-white">$620</span>
-      <span class="text-xs text-slate-400"> / night</span>
-    </div>
-    <button class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-medium text-xs rounded-xl transition-colors">
-      Reserve Dates
+    <span class="text-xs text-stone-400">Total Bundle: <strong class="text-white">₦7,700</strong></span>
+    <button class="px-3.5 py-1.5 bg-amber-400 text-slate-950 font-bold text-xs rounded-lg">
+      Add Both to Bag
     </button>
   </div>
 </div>`,

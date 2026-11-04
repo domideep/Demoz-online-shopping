@@ -1,18 +1,96 @@
-import React from 'react';
-import { Sparkles, ShieldCheck, Truck, RefreshCw, Mail, Phone, MapPin, Heart } from 'lucide-react';
-import { ScreenId } from '../types';
+import React, { useState } from 'react';
+import { Sparkles, ShieldCheck, Truck, Mail, Lock, CheckCircle2, UserCheck, LogOut, ArrowRight } from 'lucide-react';
+import { ScreenId, UserAccount } from '../types';
 
 interface FooterProps {
   onSelectScreen: (screen: ScreenId) => void;
   onOpenAssistant: () => void;
   onOpenImporter: () => void;
+  currentUser: UserAccount | null;
+  onAuthSuccess: (user: UserAccount, message: string) => void;
+  onSignOut: () => void;
+  onOpenAuthModal: (mode: 'signup' | 'login') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onSelectScreen,
   onOpenAssistant,
   onOpenImporter,
+  currentUser,
+  onAuthSuccess,
+  onSignOut,
+  onOpenAuthModal,
 }) => {
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [formFeedback, setFormFeedback] = useState('');
+
+  const handleInlineAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      setAuthError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!cleanPassword || cleanPassword.length < 6) {
+      setAuthError('Password must be at least 6 characters.');
+      return;
+    }
+
+    setAuthError('');
+
+    // Load registered accounts from localStorage
+    const savedAccountsJson = localStorage.getItem('demoz_users_db');
+    const existingAccounts: Record<string, string> = savedAccountsJson
+      ? JSON.parse(savedAccountsJson)
+      : {};
+
+    if (authMode === 'signup') {
+      existingAccounts[cleanEmail] = cleanPassword;
+      localStorage.setItem('demoz_users_db', JSON.stringify(existingAccounts));
+
+      const newUser: UserAccount = {
+        email: cleanEmail,
+        createdAt: new Date().toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        }),
+      };
+      localStorage.setItem('demoz_current_user', JSON.stringify(newUser));
+      setEmail('');
+      setPassword('');
+      setFormFeedback(`Account created! Welcome ${cleanEmail}`);
+      onAuthSuccess(newUser, `Account created successfully for ${cleanEmail}!`);
+    } else {
+      const storedPassword = existingAccounts[cleanEmail];
+      if (storedPassword && storedPassword !== cleanPassword) {
+        setAuthError('Incorrect password. Please try again.');
+        return;
+      }
+
+      if (!storedPassword) {
+        existingAccounts[cleanEmail] = cleanPassword;
+        localStorage.setItem('demoz_users_db', JSON.stringify(existingAccounts));
+      }
+
+      const loggedInUser: UserAccount = {
+        email: cleanEmail,
+        createdAt: 'Member since 2026',
+      };
+      localStorage.setItem('demoz_current_user', JSON.stringify(loggedInUser));
+      setEmail('');
+      setPassword('');
+      setFormFeedback(`Welcome back, ${cleanEmail}!`);
+      onAuthSuccess(loggedInUser, `Welcome back, ${cleanEmail}!`);
+    }
+  };
+
   return (
     <footer className="bg-stone-950 border-t border-stone-850 text-stone-400 text-xs mt-16">
       {/* Value props banner */}
@@ -24,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
             <div>
               <h4 className="font-semibold text-white text-sm">Nationwide Delivery</h4>
-              <p className="text-stone-400 text-xs">Complimentary shipping across Lagos, Abuja & all 36 states.</p>
+              <p className="text-stone-400 text-xs">Complimentary door-to-door delivery across Lagos, Abuja & all 36 states.</p>
             </div>
           </div>
 
@@ -33,8 +111,8 @@ export const Footer: React.FC<FooterProps> = ({
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-semibold text-white text-sm">10-Year Architectural Warranty</h4>
-              <p className="text-stone-400 text-xs">Certified Scandinavian oak joinery, artisan ceramics & cast iron.</p>
+              <h4 className="font-semibold text-white text-sm">Authentic Nigerian Market Quality</h4>
+              <p className="text-stone-400 text-xs">Fresh sorted grains, sealed Kings cooking oils & verified household essentials.</p>
             </div>
           </div>
 
@@ -43,8 +121,8 @@ export const Footer: React.FC<FooterProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-semibold text-white text-sm">Curated Design Studio</h4>
-              <p className="text-stone-400 text-xs">Hotlinked high-definition imagery with live HTML screen rendering.</p>
+              <h4 className="font-semibold text-white text-sm">Shop at Your Pace and Comfort</h4>
+              <p className="text-stone-400 text-xs">Instant checkout in Naira (₦), interactive AI guide & live screen previews.</p>
             </div>
           </div>
         </div>
@@ -61,28 +139,28 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="font-serif font-bold text-base text-white">Demoz shopping Nija</span>
           </div>
           <p className="text-stone-400 leading-relaxed text-xs">
-            Nigeria's curated online destination for modern Scandinavian furniture, ambient lighting, hand-thrown ceramics, and bespoke home sanctuaries.
+            Nigeria's trusted online food market: Mama's Pride 50kg rice, SunCo 5L oil, fresh eggs, frozen Titus fish, farm vegetables, and pasta at current market prices. Shop at your pace and comfort.
           </p>
           <div className="flex items-center gap-2 pt-2">
             <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-stone-900 border border-stone-800 text-emerald-400">
               NGN (₦) Currency
             </span>
             <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-stone-900 border border-stone-800 text-amber-300">
-              Lagos Atelier
+              Lagos & Nationwide
             </span>
           </div>
         </div>
 
         {/* Quick Nav */}
         <div className="space-y-3">
-          <h4 className="font-semibold text-white text-xs uppercase tracking-wider font-mono">Collections</h4>
+          <h4 className="font-semibold text-white text-xs uppercase tracking-wider font-mono">Market Sections</h4>
           <ul className="space-y-2">
             <li>
               <button
                 onClick={() => onSelectScreen('explore')}
                 className="hover:text-amber-300 transition-colors"
               >
-                All Curated Items
+                All Products (A-Z Alphabetical)
               </button>
             </li>
             <li>
@@ -90,7 +168,7 @@ export const Footer: React.FC<FooterProps> = ({
                 onClick={() => onSelectScreen('lookbook')}
                 className="hover:text-amber-300 transition-colors"
               >
-                Visual Sanctuary Lookbook
+                Market Visual Lookbook
               </button>
             </li>
             <li>
@@ -138,29 +216,149 @@ export const Footer: React.FC<FooterProps> = ({
                 onClick={() => onSelectScreen('profile')}
                 className="hover:text-amber-300 transition-colors"
               >
-                Track Order (FedEx Nigeria)
+                My Account & Delivery Orders
               </button>
             </li>
-            <li className="text-stone-400">White-Glove Assembly & Setup</li>
+            <li className="text-stone-400">Direct Customer Care & Inquiries</li>
           </ul>
         </div>
 
-        {/* Newsletter & Contact */}
-        <div className="space-y-3">
-          <h4 className="font-semibold text-white text-xs uppercase tracking-wider font-mono">Private Atelier Drops</h4>
-          <p className="text-stone-400 text-xs">
-            Subscribe to receive private preview access for rare artisanal ceramic and timber arrivals.
-          </p>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="bg-stone-900 border border-stone-800 text-xs text-white rounded-lg px-3 py-2 flex-1 focus:outline-none focus:border-amber-400"
-            />
-            <button className="bg-amber-400 hover:bg-amber-300 text-stone-950 font-semibold px-3 py-2 rounded-lg text-xs transition-colors">
-              Join
-            </button>
+        {/* Shop with us today (Account Signup & Login section) */}
+        <div className="space-y-3 bg-stone-900/60 p-4 rounded-2xl border border-stone-800">
+          <div className="flex items-center justify-between">
+            <h4 className="font-semibold text-white text-sm font-serif">Shop with us today</h4>
+            <span className="text-[10px] text-amber-400 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+              Only Email & Password
+            </span>
           </div>
+
+          {currentUser ? (
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center gap-2 text-xs text-stone-300 bg-stone-950 p-2.5 rounded-xl border border-stone-850">
+                <UserCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] text-stone-500">Signed in as:</p>
+                  <p className="font-medium text-white truncate text-xs">{currentUser.email}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => onSelectScreen('profile')}
+                  className="flex-1 py-1.5 px-3 bg-amber-400 hover:bg-amber-300 text-stone-950 font-semibold text-xs rounded-lg transition-colors"
+                >
+                  My Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={onSignOut}
+                  className="py-1.5 px-3 bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs rounded-lg transition-colors flex items-center gap-1"
+                >
+                  <LogOut className="w-3 h-3" />
+                  <span>Sign out</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleInlineAuth} className="space-y-2.5">
+              <p className="text-stone-400 text-xs leading-relaxed">
+                {authMode === 'signup'
+                  ? 'Sign up below with only your email and password to own and access your Demoz shopping account.'
+                  : 'Log in with your email and password to access your shopping cart, orders, and saved items.'}
+              </p>
+
+              {/* Email input */}
+              <div className="relative">
+                <Mail className="w-3.5 h-3.5 text-stone-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setAuthError('');
+                  }}
+                  placeholder="Enter your email"
+                  className="w-full bg-stone-950 border border-stone-800 text-xs text-white rounded-lg pl-8 pr-3 py-2 focus:outline-none focus:border-amber-400 transition-colors placeholder-stone-500"
+                />
+              </div>
+
+              {/* Password input */}
+              <div className="relative">
+                <Lock className="w-3.5 h-3.5 text-stone-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setAuthError('');
+                  }}
+                  placeholder="Enter your password (min 6 chars)"
+                  className="w-full bg-stone-950 border border-stone-800 text-xs text-white rounded-lg pl-8 pr-3 py-2 focus:outline-none focus:border-amber-400 transition-colors placeholder-stone-500"
+                />
+              </div>
+
+              {authError && (
+                <p className="text-[11px] text-rose-400 bg-rose-950/40 p-1.5 rounded-lg border border-rose-800/30">
+                  {authError}
+                </p>
+              )}
+
+              {formFeedback && (
+                <p className="text-[11px] text-emerald-400 bg-emerald-950/40 p-1.5 rounded-lg border border-emerald-800/30 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                  <span>{formFeedback}</span>
+                </p>
+              )}
+
+              {/* Action Button: changed from 'Join' to 'Sign up' */}
+              <div className="pt-1">
+                <button
+                  type="submit"
+                  className="w-full bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold px-3 py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm shadow-amber-400/20"
+                >
+                  <span>{authMode === 'signup' ? 'Sign up' : 'Log in'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Switch between Sign up and Login */}
+              <div className="text-[11px] text-center text-stone-400 pt-1">
+                {authMode === 'signup' ? (
+                  <span>
+                    Already have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthMode('login');
+                        setAuthError('');
+                        setFormFeedback('');
+                      }}
+                      className="text-amber-400 hover:underline font-semibold ml-0.5"
+                    >
+                      Log in here
+                    </button>
+                  </span>
+                ) : (
+                  <span>
+                    Need an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthMode('signup');
+                        setAuthError('');
+                        setFormFeedback('');
+                      }}
+                      className="text-amber-400 hover:underline font-semibold ml-0.5"
+                    >
+                      Sign up here
+                    </button>
+                  </span>
+                )}
+              </div>
+            </form>
+          )}
         </div>
       </div>
 
@@ -168,14 +366,14 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="border-t border-stone-850 py-6 bg-stone-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400">
           <p>© 2026 Demoz shopping Nija. All rights reserved. Billed in Nigerian Naira (₦).</p>
-          <div className="flex items-center gap-4 text-stone-400 text-xs">
+          <div className="flex items-center gap-4 text-stone-400 text-xs flex-wrap">
             <span>Paystack</span>
             <span>·</span>
             <span>Flutterwave</span>
             <span>·</span>
-            <span>Apple Pay</span>
+            <span>Direct Bank Transfer</span>
             <span>·</span>
-            <span>Mastercard / Visa / Verve</span>
+            <span>Verve / Mastercard / Visa</span>
           </div>
         </div>
       </div>

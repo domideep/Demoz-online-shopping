@@ -21,33 +21,47 @@ if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
   ai = new GoogleGenAI({ apiKey });
 }
 
-const SYSTEM_INSTRUCTION = `You are the official AI Shopping Assistant for "Demoz shopping Nija" (a premium multi-screen shopping app with hotlinked photography).
-Your role is to guide users if they encounter any difficulty, answer questions about shopping, navigation, features, and provide helpful quick actions.
+const SYSTEM_INSTRUCTION = `You are the official AI Shopping Assistant for "Demoz shopping Nija" (Nigeria's trusted online food market featuring verified current market prices).
+Your role is to guide users if they encounter any difficulty, answer questions about shopping, navigation, features, account creation, and provide helpful quick actions.
 
 Key App Features & Knowledge:
-1. SCREENS:
-   - "explore": Discover curated furniture, lighting, ceramics, textiles, and art objects. Search and filter by category.
-   - "detail": View high-res photo gallery, choose colors, read specifications and artisan background, add items to bag.
-   - "lookbook": Interactive visual sanctuary with clickable hotspots on photos that reveal featured products.
-   - "cart": Review items in bag, select Standard (Free) or White-Glove priority shipping ($45), apply promo code DEMOZ20 or SUMMER20 for 20% off, and check out with Apple Pay.
-   - "profile": Member Elena Vance (Obsidian Circle), active order tracking (order #ORD-9842 in transit), saved wishlist, and concierge settings.
-   - "custom-html": HTML & Hotlink Screen Engine. Paste any HTML snippet containing <img> tags or background URLs to render screens and extract hotlinks.
+1. STORE IDENTITY & CURRENCY:
+   - Store Name: "Demoz shopping Nija"
+   - Motto: "Shop at your pace and comfort"
+   - Currency: Nigerian Naira (₦)
+   - Delivery: Fast door-to-door delivery across Lagos, Abuja, Port Harcourt, and all 36 states of Nigeria.
 
-2. CONTROLS:
-   - Full Responsive Website: Optimized desktop navigation with Explore, Lookbook, HTML Screens, Profile, and Shopping Bag.
-   - Hotlinks: "Hotlinks" button in the top bar lists all active remote image URLs with 1-click copy.
-   - Import HTML: "Import HTML" button allows pasting custom HTML markup or loading ready-made presets.
+2. NIGERIAN FOOD MARKET CATALOG WITH CURRENT MARKET PRICES:
+   - Mama's Pride Parboiled Rice (50kg Net Bag · Olam): ₦88,500 (Market price: ₦95,000)
+   - SunCo Pure Refined Vegetable Cooking Oil (5 Litres Gallon): ₦19,500 (Market price: ₦22,000)
+   - Fresh Farm Eggs (Crate of 30 Jumbo Eggs): ₦5,500 (Market price: ₦6,200)
+   - Fresh Frozen Titus Mackerel Fish (10kg Master Carton): ₦45,000 (Market price: ₦50,000)
+   - Fresh Market Farm Produce & Soup Vegetables Basket (Tomatoes, Rodo, Onions, Carrots, Cucumbers, Greens): ₦12,500 (Market price: ₦15,000)
+   - Titus Sardines in Pure Vegetable Oil (5 Cans Value Pack): ₦5,200 (Market price: ₦5,800)
+   - Golden Penny Spaghetti (500g Durum Wheat Pasta · 2-Pack Bundle): ₦2,500 (Market price: ₦2,800)
 
-3. ACTION TAGS:
+3. ACCOUNT CREATION & LOGIN:
+   - Customers can sign up and login under the "Shop with us today" section in the footer or by clicking "Sign up / Log in" in the top header.
+   - CRITICAL: Only an email and password are required to own and access an account! No complex forms.
+
+4. SCREENS:
+   - "explore": Browse all food items with current market price tags, search by keyword, filter by categories.
+   - "detail": View high-res photo gallery, ingredients, sizes, specifications, and add to bag.
+   - "lookbook": Visual Nigerian food lookbook with interactive price tags.
+   - "cart": Review items in bag, select delivery, apply discount code DEMOZ20 for 20% off, and checkout in Nigerian Naira (₦).
+   - "profile": View active customer profile, order tracking, and saved items.
+   - "custom-html": HTML & Hotlink Screen Engine to render custom HTML screens.
+
+5. ACTION TAGS:
    You can include special action triggers in your response by adding one or more of these tags on their own line:
-   [[ACTION:navigate:explore|Go to Explore]]
-   [[ACTION:navigate:detail|View Featured Product]]
+   [[ACTION:navigate:explore|Go to Market]]
+   [[ACTION:navigate:detail|View Food Item]]
    [[ACTION:navigate:lookbook|Open Lookbook]]
    [[ACTION:navigate:cart|Go to Shopping Bag]]
    [[ACTION:navigate:profile|View My Orders]]
    [[ACTION:navigate:custom-html|Import Custom HTML]]
 
-Keep responses concise, friendly, and directly actionable. Emphasize helpfulness without robotic fluff.`;
+Keep responses concise, friendly, warm, and directly actionable. Emphasize helpfulness without robotic fluff.`;
 
 // AI Assistant endpoint
 app.post('/api/assistant', async (req, res) => {
@@ -58,11 +72,10 @@ app.post('/api/assistant', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // If Gemini API is configured, use gemini-3.8-flash
+    // If Gemini API is configured, use gemini-2.5-flash
     if (ai) {
       try {
         const contents = [];
-        // Add chat history if present
         if (Array.isArray(history)) {
           for (const item of history.slice(-6)) {
             contents.push({
@@ -72,7 +85,6 @@ app.post('/api/assistant', async (req, res) => {
           }
         }
 
-        // Add current user prompt with context
         const contextualPrompt = `[User is currently viewing "${currentScreen}" screen]\nUser question: ${message}`;
         contents.push({
           role: 'user',
@@ -80,7 +92,7 @@ app.post('/api/assistant', async (req, res) => {
         });
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'gemini-2.5-flash',
           contents,
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
@@ -92,7 +104,6 @@ app.post('/api/assistant', async (req, res) => {
         return res.json({ text: replyText });
       } catch (geminiError: any) {
         console.warn('Gemini API call failed, using smart fallback engine:', geminiError?.message);
-        // Fallback to local intelligent response below
       }
     }
 
@@ -101,43 +112,69 @@ app.post('/api/assistant', async (req, res) => {
     let reply = '';
     const actions: string[] = [];
 
-    if (lower.includes('track') || lower.includes('where is my') || lower.includes('tracking') || lower.includes('delivery') || lower.includes('fedex') || lower.includes('package')) {
-      reply = `You can track your orders in the **Profile** screen under the **Orders** tab. Your active order #ORD-9842 (Kanso Oak Chair & Vessel Vase) is currently **In Transit** via FedEx with estimated delivery tomorrow by 4:00 PM.`;
-      actions.push('[[ACTION:navigate:profile|View My Orders]]');
-    } else if (lower.includes('discount') || lower.includes('coupon') || lower.includes('promo') || lower.includes('code') || lower.includes('sale') || lower.includes('voucher')) {
-      reply = `You can use the promo code **DEMOZ20** (or **SUMMER20**) in your Shopping Bag for **20% off** your entire order!`;
+    if (lower.includes('signup') || lower.includes('sign up') || lower.includes('login') || lower.includes('log in') || lower.includes('account')) {
+      reply = `To own and access your shopping account on **Demoz shopping Nija**:
+1. Scroll down to the **"Shop with us today"** section in the footer, or tap **"Sign up"** at the top right.
+2. Enter **only your email and password** (minimum 6 characters) — no complicated details needed!
+3. Tap **Sign up** to instantly create and access your shopping account. If you already have an account, switch to **Log in**.`;
+      actions.push('[[ACTION:navigate:explore|Shop with us today]]');
+      actions.push('[[ACTION:navigate:profile|View Account]]');
+    } else if (lower.includes('rice') || lower.includes('mama')) {
+      reply = `**Mama's Pride Parboiled Rice (50kg Bag from Olam)**:
+- Current Market Price: **₦88,500** (Regular: ₦95,000)
+- 100% stone-free, parboiled long grain, non-sticky and high-yielding for family and party cooking.`;
+      actions.push('[[ACTION:navigate:explore|View Mama\'s Pride Rice]]');
+    } else if (lower.includes('oil') || lower.includes('sunco')) {
+      reply = `**SunCo Pure Refined Vegetable Cooking Oil (5 Litres Gallon)**:
+- Current Market Price: **₦19,500** (Regular: ₦22,000)
+- 5x filtered, crystal clear, fortified with Vitamin A, zero cholesterol.`;
+      actions.push('[[ACTION:navigate:explore|View SunCo Oil]]');
+    } else if (lower.includes('egg') || lower.includes('crate')) {
+      reply = `**Fresh Farm Eggs (Crate of 30 Jumbo Eggs)**:
+- Current Market Price: **₦5,500** (Regular: ₦6,200)
+- Golden yolk, thick egg whites, clean strong shells fresh from layer farms.`;
+      actions.push('[[ACTION:navigate:explore|View Farm Eggs]]');
+    } else if (lower.includes('fish') || lower.includes('titus') && lower.includes('mackerel')) {
+      reply = `**Fresh Frozen Titus Mackerel Fish (10kg Master Carton)**:
+- Current Market Price: **₦45,000** (Regular: ₦50,000)
+- Deep-sea iced Atlantic mackerel in protective blue thermal bag. Rich in Omega-3.`;
+      actions.push('[[ACTION:navigate:explore|View Titus Fish]]');
+    } else if (lower.includes('veggie') || lower.includes('vegetable') || lower.includes('tomato') || lower.includes('pepper')) {
+      reply = `**Fresh Market Farm Produce & Soup Vegetables Basket**:
+- Current Market Price: **₦12,500** (Regular: ₦15,000)
+- Includes fresh tomatoes, rodo peppers, tatase, onions, carrots, cucumbers, cabbage, sweet corn, and soup greens.`;
+      actions.push('[[ACTION:navigate:explore|View Vegetables Basket]]');
+    } else if (lower.includes('spaghetti') || lower.includes('pasta') || lower.includes('golden penny')) {
+      reply = `**Golden Penny Spaghetti (500g Pasta · 2-Pack Bundle)**:
+- Current Market Price: **₦2,500** (Regular: ₦2,800)
+- Durum wheat semolina, cooks non-sticky and firm.`;
+      actions.push('[[ACTION:navigate:explore|View Spaghetti Bundle]]');
+    } else if (lower.includes('sardine')) {
+      reply = `**Titus Sardines in Pure Vegetable Oil (5 Cans Value Pack)**:
+- Current Market Price: **₦5,200** (Regular: ₦5,800)
+- Authentic Moroccan Titus sardines in vegetable oil with pull-tab cans.`;
+      actions.push('[[ACTION:navigate:explore|View Titus Sardines]]');
+    } else if (lower.includes('price') || lower.includes('market price') || lower.includes('cost')) {
+      reply = `Here are our **Current Nigerian Market Prices**:
+- **Mama's Pride Rice 50kg**: ₦88,500
+- **SunCo Vegetable Oil 5L**: ₦19,500
+- **Fresh Farm Eggs (30-Crate)**: ₦5,500
+- **Frozen Titus Fish (10kg Carton)**: ₦45,000
+- **Fresh Soup Veggies Basket**: ₦12,500
+- **Titus Sardines (5 Cans)**: ₦5,200
+- **Golden Penny Spaghetti (2-Pack)**: ₦2,500`;
+      actions.push('[[ACTION:navigate:explore|Browse All Prices]]');
+    } else if (lower.includes('discount') || lower.includes('coupon') || lower.includes('promo') || lower.includes('code')) {
+      reply = `Use promo code **DEMOZ20** in your Shopping Bag for an instant **20% discount** off your entire order in Naira (₦)!`;
       actions.push('[[ACTION:navigate:cart|Open Bag & Apply Code]]');
-    } else if (lower.includes('checkout') || lower.includes('buy') || lower.includes('cart') || lower.includes('bag') || lower.includes('purchase') || lower.includes('order')) {
-      reply = `To checkout in Demoz shopping Nija:
-1. Tap the **Bag** tab at the bottom (or the shopping bag icon in the top header).
-2. Choose your delivery method: **Standard** (Free nationwide) or **White-Glove Express** (₦45).
-3. Apply promo code **DEMOZ20** for an instant 20% discount.
-4. Tap **Pay with Card / Apple Pay** to complete your order in Nigerian Naira (₦).`;
-      actions.push('[[ACTION:navigate:cart|Go to Shopping Bag]]');
-      actions.push('[[ACTION:navigate:profile|View My Orders]]');
-    } else if (lower.includes('html') || lower.includes('hotlink') || lower.includes('paste') || lower.includes('image')) {
-      reply = `You can import any custom HTML or hotlink images directly:
-1. Click the **"Import HTML"** button in the top bar or switch to the **"HTML Screens"** tab.
-2. Paste your code with \`<img>\` tags or choose from our pre-built presets (Nordic Living, Artisan Cafe, Villa Retreat).
-3. Tap **"Render Screens"** to view the live sandbox and view all hotlinked image URLs.`;
-      actions.push('[[ACTION:navigate:custom-html|Open HTML Screen Engine]]');
-    } else if (lower.includes('lookbook') || lower.includes('hotspot') || lower.includes('pin') || lower.includes('magazine')) {
-      reply = `The **Lookbook** is an interactive visual magazine. Tap the glowing \`+\` hotspots on the photographs to explore and view featured objects in real spaces!`;
-      actions.push('[[ACTION:navigate:lookbook|Explore Lookbook]]');
-    } else if (lower.includes('device') || lower.includes('phone') || lower.includes('tablet') || lower.includes('screen size') || lower.includes('mobile')) {
-      reply = `**Demoz shopping Nija** is formatted as a full-width, responsive online store! You can view all product collections, lookbooks, and shopping details across desktop, tablet, and mobile browsers seamlessly.`;
-    } else if (lower.includes('chair') || lower.includes('lamp') || lower.includes('furniture') || lower.includes('search')) {
-      reply = `You can search and filter through all furniture, lighting, ceramics, and textiles on the **Explore** screen using the top search bar or category tabs.`;
-      actions.push('[[ACTION:navigate:explore|Browse Collection]]');
     } else {
-      reply = `Welcome to **Demoz shopping Nija**! I can assist you with:
-- **Navigating the store**: Explore curated collections, product details, interactive lookbook, and cart.
-- **Shopping & discounts**: Use promo code **DEMOZ20** for 20% off in Nigerian Naira (₦).
-- **Order tracking**: Check live status and FedEx tracking in your Profile.
-- **HTML & Hotlinks**: Render custom HTML screens and hotlink remote images.
-
-What would you like assistance with?`;
-      actions.push('[[ACTION:navigate:explore|Browse Products]]');
+      reply = `Welcome to **Demoz shopping Nija**! Shop at your pace and comfort.
+I can assist you with:
+- **Foodstuffs with Live Price Tags**: Mama's Pride 50kg rice, SunCo 5L oil, fresh eggs, frozen Titus fish, farm vegetables, pasta, and sardines.
+- **Account Sign up & Login**: Only email and password needed under **"Shop with us today"**.
+- **Shopping Bag & Checkout**: Current market prices billed in Nigerian Naira (₦) with nationwide delivery.
+- **Order Tracking**: Track express food delivery vans across Nigeria.`;
+      actions.push('[[ACTION:navigate:explore|Browse Food Items]]');
       actions.push('[[ACTION:navigate:cart|View Shopping Bag]]');
     }
 
