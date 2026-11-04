@@ -1,0 +1,6 @@
+{
+  "name": "ScreenCraft Studio",
+  "description": "Interactive multi-screen application suite with hotlinked image rendering, screen transitions, and instant HTML/image previewer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
