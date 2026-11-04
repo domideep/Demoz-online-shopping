@@ -1,6 +1,5 @@
 export type ScreenId = 'explore' | 'detail' | 'cart' | 'profile' | 'lookbook' | 'custom-html';
 
-export type DeviceFrameType = 'mobile' | 'tablet' | 'desktop' | 'fullscreen';
 
 export interface Product {
   id: string;

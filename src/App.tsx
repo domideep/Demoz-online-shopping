@@ -4,10 +4,10 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { ScreenId, DeviceFrameType, Product, CartItem, HotlinkImageInfo } from './types';
+import { ScreenId, Product, CartItem, HotlinkImageInfo } from './types';
 import { PRODUCTS, STORIES, LOOKBOOK_STORIES, USER_ORDERS, HTML_PRESETS } from './data/mockData';
 import { HeaderBar } from './components/HeaderBar';
-import { DeviceFrame } from './components/DeviceFrame';
+import { Footer } from './components/Footer';
 import { ExploreScreen } from './components/screens/ExploreScreen';
 import { DetailScreen } from './components/screens/DetailScreen';
 import { CartScreen } from './components/screens/CartScreen';
@@ -22,7 +22,6 @@ import { CheckCircle2, Code2, Sparkles, X, Bot } from 'lucide-react';
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>('explore');
-  const [deviceFrame, setDeviceFrame] = useState<DeviceFrameType>('mobile');
   const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
   const [cart, setCart] = useState<CartItem[]>([
     {
@@ -142,14 +141,13 @@ export default function App() {
   const cartTotalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
+    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-400 selection:text-stone-950">
       {/* Top Application Header */}
       <HeaderBar
         activeScreen={activeScreen}
         onSelectScreen={setActiveScreen}
-        deviceFrame={deviceFrame}
-        onChangeDeviceFrame={setDeviceFrame}
         cartCount={cartTotalCount}
+        favoritesCount={favorites.length}
         onOpenImporter={() => setIsImporterOpen(true)}
         onOpenHotlinks={() => setIsHotlinksOpen(true)}
         onOpenAssistant={() => setIsAssistantOpen(true)}
@@ -196,64 +194,64 @@ export default function App() {
         </div>
       )}
 
-      {/* Device Frame & Active Screen Container */}
-      <main className="flex-1 flex flex-col">
-        <DeviceFrame
-          deviceFrame={deviceFrame}
-          activeScreen={activeScreen}
-          onSelectScreen={setActiveScreen}
-          cartCount={cartTotalCount}
-        >
-          {activeScreen === 'explore' && (
-            <ExploreScreen
-              onSelectProduct={handleSelectProduct}
-              onAddToCart={handleAddToCart}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-              onNavigateLookbook={() => setActiveScreen('lookbook')}
-            />
-          )}
+      {/* Full-Width Website Screen Container */}
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {activeScreen === 'explore' && (
+          <ExploreScreen
+            onSelectProduct={handleSelectProduct}
+            onAddToCart={handleAddToCart}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onNavigateLookbook={() => setActiveScreen('lookbook')}
+          />
+        )}
 
-          {activeScreen === 'detail' && (
-            <DetailScreen
-              product={selectedProduct}
-              onBack={() => setActiveScreen('explore')}
-              onAddToCart={handleAddToCart}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-            />
-          )}
+        {activeScreen === 'detail' && (
+          <DetailScreen
+            product={selectedProduct}
+            onBack={() => setActiveScreen('explore')}
+            onAddToCart={handleAddToCart}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+          />
+        )}
 
-          {activeScreen === 'cart' && (
-            <CartScreen
-              cart={cart}
-              onUpdateQuantity={handleUpdateCartQuantity}
-              onRemoveItem={handleRemoveCartItem}
-              onExplore={() => setActiveScreen('explore')}
-              onOrderSuccess={handleOrderSuccess}
-            />
-          )}
+        {activeScreen === 'cart' && (
+          <CartScreen
+            cart={cart}
+            onUpdateQuantity={handleUpdateCartQuantity}
+            onRemoveItem={handleRemoveCartItem}
+            onExplore={() => setActiveScreen('explore')}
+            onOrderSuccess={handleOrderSuccess}
+          />
+        )}
 
-          {activeScreen === 'profile' && (
-            <ProfileScreen
-              favorites={favorites}
-              onSelectProduct={handleSelectProduct}
-            />
-          )}
+        {activeScreen === 'profile' && (
+          <ProfileScreen
+            favorites={favorites}
+            onSelectProduct={handleSelectProduct}
+          />
+        )}
 
-          {activeScreen === 'lookbook' && (
-            <LookbookScreen onSelectProduct={handleSelectProduct} />
-          )}
+        {activeScreen === 'lookbook' && (
+          <LookbookScreen onSelectProduct={handleSelectProduct} />
+        )}
 
-          {activeScreen === 'custom-html' && (
-            <CustomHtmlScreen
-              currentHtml={customHtml}
-              onUpdateHtml={setCustomHtml}
-              onOpenModal={() => setIsImporterOpen(true)}
-            />
-          )}
-        </DeviceFrame>
+        {activeScreen === 'custom-html' && (
+          <CustomHtmlScreen
+            currentHtml={customHtml}
+            onUpdateHtml={setCustomHtml}
+            onOpenModal={() => setIsImporterOpen(true)}
+          />
+        )}
       </main>
+
+      {/* Full Website Footer */}
+      <Footer
+        onSelectScreen={setActiveScreen}
+        onOpenAssistant={() => setIsAssistantOpen(true)}
+        onOpenImporter={() => setIsImporterOpen(true)}
+      />
 
       {/* Interactive Toast Notification */}
       {toastMessage && (

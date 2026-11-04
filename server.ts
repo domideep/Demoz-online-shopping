@@ -34,7 +34,7 @@ Key App Features & Knowledge:
    - "custom-html": HTML & Hotlink Screen Engine. Paste any HTML snippet containing <img> tags or background URLs to render screens and extract hotlinks.
 
 2. CONTROLS:
-   - Device Frame: Top bar has buttons to switch between iPhone 16 Pro, iPad Tablet, Desktop Canvas, and Fullscreen.
+   - Full Responsive Website: Optimized desktop navigation with Explore, Lookbook, HTML Screens, Profile, and Shopping Bag.
    - Hotlinks: "Hotlinks" button in the top bar lists all active remote image URLs with 1-click copy.
    - Import HTML: "Import HTML" button allows pasting custom HTML markup or loading ready-made presets.
 
@@ -125,21 +125,16 @@ app.post('/api/assistant', async (req, res) => {
       reply = `The **Lookbook** is an interactive visual magazine. Tap the glowing \`+\` hotspots on the photographs to explore and view featured objects in real spaces!`;
       actions.push('[[ACTION:navigate:lookbook|Explore Lookbook]]');
     } else if (lower.includes('device') || lower.includes('phone') || lower.includes('tablet') || lower.includes('screen size') || lower.includes('mobile')) {
-      reply = `You can switch device views anytime using the device icons on the right of the top header:
-- **iPhone 16 Pro** (with dynamic island & bezel)
-- **Tablet** (iPad frame)
-- **Desktop Canvas** (browser frame)
-- **Fullscreen** (maximizes canvas)`;
+      reply = `**Demoz shopping Nija** is formatted as a full-width, responsive online store! You can view all product collections, lookbooks, and shopping details across desktop, tablet, and mobile browsers seamlessly.`;
     } else if (lower.includes('chair') || lower.includes('lamp') || lower.includes('furniture') || lower.includes('search')) {
       reply = `You can search and filter through all furniture, lighting, ceramics, and textiles on the **Explore** screen using the top search bar or category tabs.`;
       actions.push('[[ACTION:navigate:explore|Browse Collection]]');
     } else {
       reply = `Welcome to **Demoz shopping Nija**! I can assist you with:
-- **Navigating screens**: Explore items, product details, interactive lookbook, and cart.
-- **Shopping & discounts**: Use promo code **DEMOZ20** for 20% off.
+- **Navigating the store**: Explore curated collections, product details, interactive lookbook, and cart.
+- **Shopping & discounts**: Use promo code **DEMOZ20** for 20% off in Nigerian Naira (₦).
 - **Order tracking**: Check live status and FedEx tracking in your Profile.
 - **HTML & Hotlinks**: Render custom HTML screens and hotlink remote images.
-- **Device views**: Preview on iPhone 16 Pro, iPad, or Desktop.
 
 What would you like assistance with?`;
       actions.push('[[ACTION:navigate:explore|Browse Products]]');
